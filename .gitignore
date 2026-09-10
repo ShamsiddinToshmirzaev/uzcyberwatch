@@ -5,6 +5,7 @@ __pycache__/
 ml/models/
 data/*.csv
 !data/.gitkeep
+!data/urls.csv
 .pytest_cache/
 .coverage
 htmlcov/
