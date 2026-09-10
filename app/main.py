@@ -5,15 +5,19 @@ sozlaydi. DB ulanishi startup da ochiladi, shutdown da yopiladi.
 """
 from __future__ import annotations
 
+import pathlib
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app import __version__
 from app.api import analyse, cases, health
 from app.db import close_engine
+
+_STATIC = pathlib.Path(__file__).parent / "static"
 
 
 @asynccontextmanager
@@ -48,3 +52,8 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(analyse.router, prefix="/api/v1")
 app.include_router(cases.router,   prefix="/api/v1")
+
+# FT-31..37: Frontend SPA — barcha API routerlardan KEYIN mount qilinadi
+# html=True: /index.html va bilinmagan yo'llar uchun SPA ni qaytaradi
+if _STATIC.exists():
+    app.mount("/", StaticFiles(directory=_STATIC, html=True), name="static")

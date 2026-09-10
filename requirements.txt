@@ -30,6 +30,8 @@ numpy==2.2.1
 pandas==2.2.3
 joblib==1.4.2
 
+aiofiles==24.1.0
+
 # --- ishlab chiqish va sinov (NFT-11)
 pytest==8.3.4
 pytest-cov==6.0.0

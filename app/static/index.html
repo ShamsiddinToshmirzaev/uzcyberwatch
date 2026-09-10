@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UzCyberWatch</title>
+<style>
+/* ---- Reset & tokenlar ---- */
+:root {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --border: #d1dbe6;
+  --text: #1a2332;
+  --text-muted: #5a6a7e;
+  --primary: #1e4d8c;
+  --primary-light: #2d6cc0;
+  --danger: #c0392b;
+  --warn: #e67e22;
+  --ok: #27ae60;
+  --radius: 8px;
+  --shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --primary: #58a6ff;
+    --primary-light: #79c0ff;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  padding-bottom: 40px;
+}
+a { color: var(--primary); }
+button { cursor: pointer; }
+
+/* ---- Header / Nav ---- */
+header {
+  background: var(--primary);
+  color: #fff;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 52px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+nav { display: flex; gap: 4px; }
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,.75);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background .15s, color .15s;
+}
+.nav-btn:hover, .nav-btn.active {
+  background: rgba(255,255,255,.18);
+  color: #fff;
+}
+
+/* ---- Layout ---- */
+.page { max-width: 960px; margin: 24px auto; padding: 0 16px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ---- Card ---- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.card h3 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; color: var(--text); }
+
+/* ---- Stats grid ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+}
+.stat-card h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); margin-bottom: 8px; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+.badge.ok   { background: #d4edda; color: #155724; }
+.badge.warn { background: #fff3cd; color: #856404; }
+.badge.err  { background: #f8d7da; color: #721c24; }
+
+/* ---- Form ---- */
+.form-group { margin-bottom: 14px; }
+label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+input[type="text"], textarea, select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  transition: border-color .15s;
+}
+input[type="text"]:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-light);
+}
+textarea { resize: vertical; min-height: 80px; }
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity .15s;
+}
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--primary-light); }
+.btn-secondary { background: var(--border); color: var(--text); }
+.btn-secondary:hover { opacity: .8; }
+
+/* ---- Risk display ---- */
+.risk-display {
+  display: flex; align-items: center; gap: 24px; margin-bottom: 16px;
+}
+.risk-gauge-wrap { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
+.risk-gauge-wrap svg { width: 90px; height: 90px; }
+.risk-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.risk-number { font-size: 26px; font-weight: 800; line-height: 1; }
+.risk-number.high   { color: var(--danger); }
+.risk-number.medium { color: var(--warn); }
+.risk-number.low    { color: var(--ok); }
+.risk-label { font-size: 9px; text-transform: uppercase; color: var(--text-muted); }
+.risk-meta { flex: 1; }
+.incident-type { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.confidence { font-size: 12px; color: var(--text-muted); }
+
+/* ---- Reasons ---- */
+#reasons-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+#reasons-list li {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 6px 10px;
+  background: var(--bg);
+  border-radius: 6px;
+  font-size: 13px;
+}
+.layer-tag {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 4px;
+  flex-shrink: 0;
+}
+.layer-rule       { background: #fce4ec; color: #880e4f; }
+.layer-ml         { background: #e3f2fd; color: #0d47a1; }
+.layer-heuristic  { background: #fff8e1; color: #e65100; }
+.layer-enrichment { background: #e8f5e9; color: #1b5e20; }
+.reason-weight { font-weight: 700; color: var(--text-muted); min-width: 26px; }
+
+/* ---- Table ---- */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left; padding: 8px 12px;
+  background: var(--bg); border-bottom: 2px solid var(--border);
+  font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text-muted); white-space: nowrap;
+}
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg); }
+
+/* ---- Status badges ---- */
+.status-open       { color: var(--primary); font-weight: 600; }
+.status-in_review  { color: var(--warn); font-weight: 600; }
+.status-closed     { color: var(--text-muted); }
+.status-archived   { color: var(--text-muted); }
+
+/* ---- Toolbar ---- */
+.toolbar {
+  display: flex; gap: 8px; align-items: center;
+  flex-wrap: wrap; margin-bottom: 12px;
+}
+.toolbar select { max-width: 200px; }
+
+/* ---- Pagination ---- */
+#pagination { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 12px; }
+#pagination button {
+  padding: 4px 10px; border: 1px solid var(--border);
+  border-radius: 4px; background: var(--surface); color: var(--text);
+  font-size: 12px;
+}
+#pagination button:disabled {
+  background: var(--primary); color: #fff; border-color: var(--primary);
+}
+
+/* ---- Graph canvas ---- */
+#graph-canvas {
+  display: block; max-width: 100%; border-radius: 6px;
+  background: var(--bg); border: 1px solid var(--border);
+}
+.hint { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+
+/* ---- Enrichment table ---- */
+#enrichment-section table { font-size: 12px; }
+#enrichment-section td:first-child { color: var(--text-muted); font-weight: 600; width: 140px; }
+
+/* ---- PII section ---- */
+#pii-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+#pii-list li {
+  padding: 4px 10px; background: #fff3cd;
+  border-radius: 4px; font-size: 12px; color: #856404;
+}
+
+/* ---- Loader ---- */
+.spinner {
+  width: 20px; height: 20px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  header { padding: 0 12px; }
+  .page { padding: 0 12px; }
+  .risk-display { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🛡 UzCyberWatch</div>
+  <nav>
+    <button class="nav-btn active" data-tab="dashboard">Bosh sahifa</button>
+    <button class="nav-btn" data-tab="analyse">Tahlil</button>
+    <button class="nav-btn" data-tab="cases">Ishlar</button>
+  </nav>
+</header>
+
+<div class="page">
+
+  <!-- ======================== FT-31: Dashboard ======================== -->
+  <section id="dashboard" class="tab-panel active">
+
+    <div class="stats-grid">
+      <div class="stat-card" id="stat-status">
+        <h3>Tizim holati</h3>
+        <div class="stat-value"><span class="badge warn" id="status-badge">Tekshirilmoqda…</span></div>
+      </div>
+      <div class="stat-card" id="stat-cases-count">
+        <h3>Jami ishlar</h3>
+        <div class="stat-value" id="cases-count">—</div>
+      </div>
+      <div class="stat-card">
+        <h3>API versiya</h3>
+        <div class="stat-value" id="api-version">—</div>
+      </div>
+    </div>
+
+    <!-- FT-36: Kampaniya grafı -->
+    <div class="card" id="graph-section">
+      <h2>Kampaniya grafı — klaster ko'rinishi (FT-36)</h2>
+      <canvas id="graph-canvas" width="720" height="280"></canvas>
+      <p class="hint">Fishing domenlarining kampaniya klasterlari (Louvain algoritmi). Rangi bir xil tugunlar bir kampaniyaga tegishli.</p>
+    </div>
+
+  </section>
+
+  <!-- ======================== FT-32/33/35: Tahlil ======================== -->
+  <section id="analyse" class="tab-panel">
+
+    <div class="card">
+      <h2>URL / Matn tahlili</h2>
+      <form id="analyse-form" autocomplete="off">
+        <div class="form-group">
+          <label for="url-input">URL (ixtiyoriy)</label>
+          <input type="text" id="url-input" placeholder="https://misol.uz/login">
+        </div>
+        <div class="form-group">
+          <label for="text-input">Matn (ixtiyoriy)</label>
+          <textarea id="text-input" rows="4" placeholder="Shubhali SMS, xabar yoki sertifikat matni…"></textarea>
+        </div>
+        <button type="submit" id="analyse-btn" class="btn btn-primary">Tahlil qilish</button>
+      </form>
+    </div>
+
+    <!-- FT-33: Risk natijalari -->
+    <div class="card" id="result-panel" style="display:none">
+      <h2>Tahlil natijasi</h2>
+
+      <div class="risk-display">
+        <div class="risk-gauge-wrap">
+          <svg viewBox="0 0 36 36">
+            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none" stroke="var(--border)" stroke-width="3.8"/>
+            <path id="gauge-arc" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none" stroke="var(--ok)" stroke-width="3.8"
+              stroke-dasharray="0, 100"/>
+          </svg>
+          <div class="risk-center">
+            <span id="risk-score" class="risk-number low">0</span>
+            <span class="risk-label">/ 100</span>
+          </div>
+        </div>
+        <div class="risk-meta">
+          <div class="incident-type" id="incident-type">—</div>
+          <div class="confidence" id="confidence-text"></div>
+          <div id="lang-text" style="font-size:12px;color:var(--text-muted);margin-top:4px"></div>
+        </div>
+      </div>
+
+      <div id="reasons-section">
+        <h3>Aniqlash sabablari (FT-27)</h3>
+        <ul id="reasons-list"></ul>
+      </div>
+
+      <div id="pii-section" style="display:none">
+        <h3>Shaxsiy ma'lumotlar topildi (HT-03)</h3>
+        <ul id="pii-list"></ul>
+      </div>
+
+      <!-- HT-05: huquqiy tavsiyalar -->
+      <div id="legal-section">
+        <h3>Huquqiy tavsiyalar (HT-05)</h3>
+        <ul id="legal-list"></ul>
+      </div>
+
+      <!-- FT-35: Boyitish ma'lumotlari -->
+      <div id="enrichment-section">
+        <h3>Boyitish ma'lumotlari (FT-35)</h3>
+        <table>
+          <tbody id="enrichment-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ======================== FT-34/37: Ishlar ======================== -->
+  <section id="cases" class="tab-panel">
+
+    <div class="card">
+      <div class="toolbar">
+        <select id="status-filter">
+          <option value="">Barcha holatlar</option>
+          <option value="open">Ochiq</option>
+          <option value="in_review">Ko'rib chiqilmoqda</option>
+          <option value="closed">Yopiq</option>
+          <option value="archived">Arxivlangan</option>
+        </select>
+        <button class="btn btn-secondary" id="refresh-cases">Yangilash</button>
+        <!-- FT-37: CSV eksport -->
+        <button class="btn btn-secondary" id="export-btn">⬇ CSV Eksport</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="cases-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Sarlavha</th>
+              <th>Holat</th>
+              <th>Risk</th>
+              <th>Viloyat</th>
+              <th>Sanasi</th>
+            </tr>
+          </thead>
+          <tbody id="cases-body">
+            <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">
+              Yuklash uchun "Yangilash" tugmasini bosing
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="pagination"></div>
+    </div>
+
+  </section>
+
+</div><!-- .page -->
+
+<script>
+/* ======================== Konstanta ======================== */
+const API = '/api/v1';
+
+/* ======================== Tab navigatsiya ======================== */
+const tabs    = document.querySelectorAll('.nav-btn');
+const panels  = document.querySelectorAll('.tab-panel');
+
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const name = btn.dataset.tab;
+    tabs.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    panels.forEach(p => p.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    if (name === 'dashboard') loadDashboard();
+    if (name === 'cases')     loadCases(1);
+  });
+});
+
+/* ======================== FT-31: Dashboard ======================== */
+async function loadDashboard() {
+  // Tizim holati (/health)
+  try {
+    const h = await fetch('/health').then(r => r.json());
+    const badge = document.getElementById('status-badge');
+    if (h.status === 'ok') {
+      badge.textContent = '✅ Faol';
+      badge.className = 'badge ok';
+    } else {
+      badge.textContent = '⚠ Noma\'lum';
+      badge.className = 'badge warn';
+    }
+    document.getElementById('api-version').textContent = h.version || '—';
+  } catch {
+    const badge = document.getElementById('status-badge');
+    badge.textContent = '❌ Ulanib bo\'lmadi';
+    badge.className = 'badge err';
+  }
+
+  // Ishlar soni (/api/v1/cases)
+  try {
+    const data = await fetch(`${API}/cases?page=1&size=1`).then(r => r.json());
+    document.getElementById('cases-count').textContent = data.total ?? '—';
+  } catch {
+    document.getElementById('cases-count').textContent = '—';
+  }
+
+  // FT-36: Graf chizish
+  drawGraph();
+}
+
+/* ======================== FT-36: Graf vizualizatsiyasi ======================== */
+function drawGraph() {
+  const canvas = document.getElementById('graph-canvas');
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Namuna kampaniya tugunlari (real tizimda /api/v1/graph dan keladi)
+  const nodes = [
+    // Kampaniya A (qizil) — bank taqlidi
+    { x: 160, y: 110, r: 18, label: 'kapitalbnk.uz',   cluster: 0 },
+    { x: 240, y:  70, r: 14, label: 'kapital-bank.uz', cluster: 0 },
+    { x: 200, y: 185, r: 12, label: '91.2.x.x',        cluster: 0 },
+    // Kampaniya B (ko'k) — to'lov taqlidi
+    { x: 460, y: 100, r: 18, label: 'payme-kirish.com', cluster: 1 },
+    { x: 540, y:  60, r: 14, label: 'payme-uz.net',     cluster: 1 },
+    { x: 500, y: 175, r: 12, label: 'click-uz.site',    cluster: 1 },
+    // Kampaniya C (yashil) — yakka
+    { x: 350, y: 210, r: 12, label: 'uzcard-login.tk',  cluster: 2 },
+  ];
+  const edges = [[0,1],[0,2],[1,2],[3,4],[3,5],[4,5]];
+  const palette = ['#e74c3c','#2980b9','#27ae60','#f39c12'];
+
+  // Qirralar
+  edges.forEach(([i,j]) => {
+    ctx.beginPath();
+    ctx.strokeStyle = '#c8d6e5';
+    ctx.lineWidth = 1.5;
+    ctx.moveTo(nodes[i].x, nodes[i].y);
+    ctx.lineTo(nodes[j].x, nodes[j].y);
+    ctx.stroke();
+  });
+
+  // Tugunlar
+  nodes.forEach(n => {
+    const col = palette[n.cluster % palette.length];
+    // Shadow
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Label
+    ctx.fillStyle = getComputedStyle(document.documentElement)
+                      .getPropertyValue('--text').trim() || '#1a2332';
+    ctx.font = '9px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText(n.label.slice(0, 16), n.x, n.y + n.r + 12);
+  });
+
+  // Klaster legenda
+  const legend = [
+    { label: 'Kampaniya A (bank)', color: palette[0] },
+    { label: 'Kampaniya B (to\'lov)', color: palette[1] },
+    { label: 'Kampaniya C (karta)', color: palette[2] },
+  ];
+  legend.forEach((l, i) => {
+    ctx.beginPath();
+    ctx.arc(620, 60 + i * 28, 7, 0, Math.PI * 2);
+    ctx.fillStyle = l.color;
+    ctx.fill();
+    ctx.fillStyle = getComputedStyle(document.documentElement)
+                      .getPropertyValue('--text-muted').trim() || '#5a6a7e';
+    ctx.font = '11px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText(l.label, 634, 64 + i * 28);
+  });
+}
+
+/* ======================== FT-32: Tahlil formasi ======================== */
+document.getElementById('analyse-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const url  = document.getElementById('url-input').value.trim();
+  const text = document.getElementById('text-input').value.trim();
+  if (!url && !text) {
+    alert('URL yoki matn kiriting');
+    return;
+  }
+
+  const btn = document.getElementById('analyse-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Tahlil…';
+
+  try {
+    const body = {};
+    if (url)  body.url  = url;
+    if (text) body.text = text;
+
+    const resp = await fetch(`${API}/analyse`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body),
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${resp.status}`);
+    }
+    displayResult(await resp.json());
+  } catch (err) {
+    alert('Tahlil xatosi: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Tahlil qilish';
+  }
+});
+
+/* ======================== FT-33: Natijalar ======================== */
+function displayResult(v) {
+  const panel = document.getElementById('result-panel');
+  panel.style.display = 'block';
+
+  // Risk gauge
+  const score = v.risk_score ?? 0;
+  const el = document.getElementById('risk-score');
+  el.textContent = score;
+  el.className = 'risk-number ' + (score >= 70 ? 'high' : score >= 35 ? 'medium' : 'low');
+
+  const arc   = document.getElementById('gauge-arc');
+  const color = score >= 70 ? 'var(--danger)' : score >= 35 ? 'var(--warn)' : 'var(--ok)';
+  arc.setAttribute('stroke', color);
+  arc.setAttribute('stroke-dasharray', `${score}, 100`);
+
+  document.getElementById('incident-type').textContent = v.incident_type || '—';
+  document.getElementById('confidence-text').textContent =
+    `Ishonch: ${((v.confidence ?? 0) * 100).toFixed(0)}%`;
+  document.getElementById('lang-text').textContent =
+    v.lang ? `Til: ${v.lang}` : '';
+
+  // Sabablar (FT-27)
+  const ul = document.getElementById('reasons-list');
+  ul.innerHTML = (v.reasons || []).map(r => `
+    <li>
+      <span class="layer-tag layer-${r.layer}">${r.layer}</span>
+      <span class="reason-weight">${r.weight}</span>
+      <span><b>${r.code}</b> — ${escHtml(r.detail)}</span>
+    </li>`).join('') || '<li style="color:var(--text-muted)">Sabab topilmadi</li>';
+
+  // PII (HT-03) — faqat hint va hash
+  const piiSec = document.getElementById('pii-section');
+  const piiItems = v.pii_found || [];
+  if (piiItems.length > 0) {
+    piiSec.style.display = 'block';
+    document.getElementById('pii-list').innerHTML = piiItems.map(p =>
+      `<li>${escHtml(p.kind)}: ${escHtml(p.hint)}</li>`).join('');
+  } else {
+    piiSec.style.display = 'none';
+  }
+
+  // Huquqiy tavsiyalar (HT-05)
+  document.getElementById('legal-list').innerHTML = (v.legal || []).map(l => `
+    <li style="padding:4px 0;font-size:13px">
+      <b>${escHtml(l.article_code)}</b> — ${escHtml(l.rationale)}
+      <span style="color:var(--warn);font-size:11px"> (Ko'rib chiqish zarur)</span>
+    </li>`).join('') || '<li style="color:var(--text-muted)">Moddalar topilmadi</li>';
+
+  // FT-35: Boyitish ma'lumotlari (enrich qismida kelishi mumkin)
+  const enrichFields = [
+    ['IP',          v.enrichment?.ip],
+    ['ASN',         v.enrichment?.asn],
+    ['Mamlakat',    v.enrichment?.geo_country],
+    ['Domen yoshi', v.enrichment?.domain_age_days != null
+                      ? `${v.enrichment.domain_age_days} kun` : null],
+    ['Registrar',   v.enrichment?.registrar],
+    ['SSL emitent', v.enrichment?.cert_issuer],
+    ['pHash',       v.enrichment?.screenshot_phash],
+  ];
+  document.getElementById('enrichment-body').innerHTML = enrichFields
+    .filter(([, val]) => val != null)
+    .map(([k, val]) => `<tr><td>${k}</td><td>${escHtml(String(val))}</td></tr>`)
+    .join('') || '<tr><td colspan="2" style="color:var(--text-muted)">Boyitish ma\'lumotlari yo\'q</td></tr>';
+}
+
+/* ======================== FT-34: Ishlar ======================== */
+let _page = 1;
+
+async function loadCases(page = 1) {
+  _page = page;
+  const status = document.getElementById('status-filter').value;
+  const params = new URLSearchParams({ page, size: 20 });
+  if (status) params.append('status', status);
+
+  const tbody = document.getElementById('cases-body');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center"><span class="spinner"></span></td></tr>';
+
+  try {
+    const data = await fetch(`${API}/cases?${params}`).then(r => r.json());
+    const items = data.items || [];
+
+    if (items.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">Ishlar topilmadi</td></tr>';
+    } else {
+      tbody.innerHTML = items.map(c => `
+        <tr>
+          <td style="font-family:monospace;font-size:11px">${c.id.slice(0,8)}…</td>
+          <td>${escHtml(c.title)}</td>
+          <td><span class="status-${c.status}">${c.status}</span></td>
+          <td style="font-weight:700;color:${c.total_risk >= 70 ? 'var(--danger)' : c.total_risk >= 35 ? 'var(--warn)' : 'var(--ok)'}">${c.total_risk}</td>
+          <td>${c.region || '—'}</td>
+          <td style="color:var(--text-muted)">${new Date(c.opened_at).toLocaleDateString('uz-UZ')}</td>
+        </tr>`).join('');
+    }
+
+    // Sahifalash
+    const total = data.total || 0;
+    const pages = Math.ceil(total / 20);
+    document.getElementById('pagination').innerHTML =
+      Array.from({ length: Math.min(pages, 10) }, (_, i) => i + 1)
+        .map(p => `<button onclick="loadCases(${p})" ${p === page ? 'disabled' : ''}>${p}</button>`)
+        .join('');
+
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6" style="color:var(--danger);padding:16px">Xato: ${escHtml(err.message)}</td></tr>`;
+  }
+}
+
+document.getElementById('status-filter').addEventListener('change', () => loadCases(1));
+document.getElementById('refresh-cases').addEventListener('click',  () => loadCases(_page));
+
+/* ======================== FT-37: CSV eksport ======================== */
+document.getElementById('export-btn').addEventListener('click', async () => {
+  const status = document.getElementById('status-filter').value;
+  const params = new URLSearchParams({ page: 1, size: 1000 });
+  if (status) params.append('status', status);
+
+  try {
+    const data  = await fetch(`${API}/cases?${params}`).then(r => r.json());
+    const items = data.items || [];
+
+    const header = ['id', 'title', 'status', 'total_risk', 'region', 'opened_at'];
+    const rows = items.map(c =>
+      [c.id, `"${(c.title || '').replace(/"/g, '""')}"`, c.status,
+       c.total_risk, c.region || '', c.opened_at].join(','));
+    const csv = [header.join(','), ...rows].join('\n');
+
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href  = URL.createObjectURL(blob);
+    a.download = `uzcyberwatch-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+  } catch (err) {
+    alert('Eksport xatosi: ' + err.message);
+  }
+});
+
+/* ======================== Yordamchi funksiyalar ======================== */
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/* ======================== Startup ======================== */
+loadDashboard();
+</script>
+</body>
+</html>
