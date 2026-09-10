@@ -518,3 +518,105 @@ class TestPipeline:
             "screenshot_phash", "reputation",
         }
         assert expected_fields == set(vars(r).keys())
+
+
+# ================================================================= FT-19: _vt_ip va _abuseipdb (qo'shimcha qamov)
+
+class TestVtIpDirect:
+    @patch("app.enrich.reputation.httpx.AsyncClient")
+    def test_vt_ip_success(self, mock_client_cls):
+        resp = MagicMock()
+        resp.status_code = 200
+        resp.json.return_value = {
+            "data": {"attributes": {
+                "last_analysis_stats": {"malicious": 5},
+                "reputation": -10,
+            }}
+        }
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=resp)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        with patch("app.enrich.reputation.VT_KEY", "k"):
+            result = _run(reputation._vt_ip("1.2.3.4"))
+
+        assert result["vt_malicious"] == 5
+        assert result["vt_reputation"] == -10
+
+    @patch("app.enrich.reputation.httpx.AsyncClient")
+    def test_vt_ip_non200_returns_empty(self, mock_client_cls):
+        resp = MagicMock()
+        resp.status_code = 429
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=resp)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        with patch("app.enrich.reputation.VT_KEY", "k"):
+            result = _run(reputation._vt_ip("1.2.3.4"))
+        assert result == {}
+
+    @patch("app.enrich.reputation.httpx.AsyncClient")
+    def test_vt_ip_exception_returns_empty(self, mock_client_cls):
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(side_effect=Exception("timeout"))
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        with patch("app.enrich.reputation.VT_KEY", "k"):
+            result = _run(reputation._vt_ip("1.2.3.4"))
+        assert result == {}
+
+
+class TestAbuseIpdbDirect:
+    @patch("app.enrich.reputation.httpx.AsyncClient")
+    def test_abuseipdb_success(self, mock_client_cls):
+        resp = MagicMock()
+        resp.status_code = 200
+        resp.json.return_value = {
+            "data": {
+                "abuseConfidenceScore": 87,
+                "totalReports": 42,
+            }
+        }
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=resp)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        with patch("app.enrich.reputation.ABUSEIPDB_KEY", "k"):
+            result = _run(reputation._abuseipdb("1.2.3.4"))
+
+        assert result["abuse_score"] == 87
+        assert result["abuse_reports"] == 42
+
+    @patch("app.enrich.reputation.httpx.AsyncClient")
+    def test_abuseipdb_non200_returns_empty(self, mock_client_cls):
+        resp = MagicMock()
+        resp.status_code = 403
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(return_value=resp)
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        with patch("app.enrich.reputation.ABUSEIPDB_KEY", "k"):
+            result = _run(reputation._abuseipdb("1.2.3.4"))
+        assert result == {}
+
+    @patch("app.enrich.reputation.httpx.AsyncClient")
+    def test_abuseipdb_exception_returns_empty(self, mock_client_cls):
+        mock_client = AsyncMock()
+        mock_client.get = AsyncMock(side_effect=ConnectionError("refused"))
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        with patch("app.enrich.reputation.ABUSEIPDB_KEY", "k"):
+            result = _run(reputation._abuseipdb("1.2.3.4"))
+        assert result == {}
