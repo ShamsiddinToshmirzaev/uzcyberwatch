@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+ml/models/
+data/*.csv
+!data/.gitkeep
+.pytest_cache/
+.coverage
+htmlcov/
+*.joblib

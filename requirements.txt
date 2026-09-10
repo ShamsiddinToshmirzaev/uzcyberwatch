@@ -1,0 +1,30 @@
+# --- yadro
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.0
+sqlalchemy==2.0.36
+alembic==1.14.0
+psycopg[binary]==3.2.3
+
+# --- kollektorlar (FT-01..09)
+websockets==14.1
+httpx==0.28.1
+tenacity==9.0.0
+
+# --- boyitish (FT-15..20)
+geoip2==4.8.1
+python-whois==0.9.5
+tldextract==5.1.3
+ImageHash==4.3.1
+
+# --- ML / NLP (FT-23, FT-24)
+scikit-learn==1.6.0
+numpy==2.2.1
+pandas==2.2.3
+joblib==1.4.2
+
+# --- ishlab chiqish va sinov (NFT-11)
+pytest==8.3.4
+pytest-cov==6.0.0
+ruff==0.8.4
