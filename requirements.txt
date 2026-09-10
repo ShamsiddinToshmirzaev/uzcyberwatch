@@ -11,6 +11,7 @@ psycopg[binary]==3.2.3
 websockets==14.1
 httpx==0.28.1
 tenacity==9.0.0
+python-telegram-bot==21.9
 
 # --- boyitish (FT-15..20)
 geoip2==4.8.1
