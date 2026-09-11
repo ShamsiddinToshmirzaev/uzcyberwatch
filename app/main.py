@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app import __version__
-from app.api import analyse, auth, cases, health, users
+from app.api import analyse, auth, cases, health, stats, users
 from app.db import close_engine
 
 _STATIC = pathlib.Path(__file__).parent / "static"
@@ -54,6 +54,7 @@ app.include_router(analyse.router, prefix="/api/v1")
 app.include_router(cases.router,   prefix="/api/v1")
 app.include_router(auth.router,    prefix="/api/v1")
 app.include_router(users.router,   prefix="/api/v1")
+app.include_router(stats.router,   prefix="/api/v1")
 
 # FT-31..37: Frontend SPA — barcha API routerlardan KEYIN mount qilinadi
 # html=True: /index.html va bilinmagan yo'llar uchun SPA ni qaytaradi
