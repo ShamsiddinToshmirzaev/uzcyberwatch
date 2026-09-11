@@ -1,12 +1,19 @@
-"""Boshlang'ich ma'lumotlar: JK moddalari va standart detektorlar. NFT-10.
+"""Boshlang'ich ma'lumotlar: admin foydalanuvchi, JK moddalari, detektorlar. NFT-10.
 
 revision: b2c3d4e5f6a1
 down_revision: a1b2c3d4e5f6 (initial_schema dan keyin)
+
+Admin paroli UCW_ADMIN_PASSWORD muhit o'zgaruvchisidan o'qiladi.
+O'rnatilmagan bo'lsa standart: Admin@12345 (birinchi kirishda o'zgartiring).
 """
 from __future__ import annotations
 
+import os
+
 from alembic import op
 import sqlalchemy as sa
+
+from app.auth.password import hash_password
 
 # ----------------------------------------------------------------- Identifikatorlar
 
@@ -19,8 +26,26 @@ depends_on = None
 # ================================================================= upgrade
 
 def upgrade() -> None:
-    """JK moddalari va standart detektorlar jadvalga qo'shiladi."""
+    """Admin foydalanuvchi, JK moddalari va detektorlar jadvalga qo'shiladi."""
 
+    # ---- 0. Admin foydalanuvchi (ON CONFLICT — ikkinchi run xavfsiz) --------
+    default_password = os.environ.get("UCW_ADMIN_PASSWORD", "Admin@12345")
+    password_hash = hash_password(default_password)
+    op.execute(
+        sa.text(
+            "INSERT INTO users "
+            "  (id, username, password_hash, role, mfa_enabled, is_active) "
+            "VALUES "
+            "  (:id, :username, :password_hash, 'admin', false, true) "
+            "ON CONFLICT (username) DO NOTHING"
+        ).bindparams(
+            id="00000000-0000-0000-0000-000000000000",
+            username="admin",
+            password_hash=password_hash,
+        )
+    )
+
+    # ---- 1. JK moddalari ----------------------------------------------------
     legal_articles = sa.table(
         "legal_articles",
         sa.column("code", sa.Text),
@@ -78,6 +103,7 @@ def upgrade() -> None:
         sa.column("params", sa.Text),
     )
 
+    # ---- 2. Standart detektorlar --------------------------------------------
     op.bulk_insert(detectors, [
         {
             "id": "00000000-0000-0000-0000-000000000001",
@@ -128,4 +154,7 @@ def downgrade() -> None:
     )
     op.execute(
         "DELETE FROM legal_articles WHERE code IN ('278', '278-1', '168', '173', '182')"
+    )
+    op.execute(
+        "DELETE FROM users WHERE id = '00000000-0000-0000-0000-000000000000'"
     )
