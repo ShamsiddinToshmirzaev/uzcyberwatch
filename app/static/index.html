@@ -5,163 +5,126 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UzCyberWatch</title>
 <style>
-/* ---- Reset & tokenlar ---- */
 :root {
-  --bg: #f0f4f8;
-  --surface: #ffffff;
-  --border: #d1dbe6;
-  --text: #1a2332;
-  --text-muted: #5a6a7e;
-  --primary: #1e4d8c;
-  --primary-light: #2d6cc0;
-  --danger: #c0392b;
-  --warn: #e67e22;
-  --ok: #27ae60;
-  --radius: 8px;
-  --shadow: 0 2px 8px rgba(0,0,0,.08);
+  --bg: #f0f4f8; --surface: #ffffff; --border: #d1dbe6;
+  --text: #1a2332; --text-muted: #5a6a7e;
+  --primary: #1e4d8c; --primary-light: #2d6cc0;
+  --danger: #c0392b; --warn: #e67e22; --ok: #27ae60;
+  --radius: 8px; --shadow: 0 2px 8px rgba(0,0,0,.08);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1117;
-    --surface: #161b22;
-    --border: #30363d;
-    --text: #e6edf3;
-    --text-muted: #8b949e;
-    --primary: #58a6ff;
-    --primary-light: #79c0ff;
+    --bg: #0d1117; --surface: #161b22; --border: #30363d;
+    --text: #e6edf3; --text-muted: #8b949e;
+    --primary: #58a6ff; --primary-light: #79c0ff;
   }
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  padding-bottom: 40px;
-}
+body { font-family: system-ui,-apple-system,sans-serif; background: var(--bg); color: var(--text); font-size: 14px; padding-bottom: 40px; }
 a { color: var(--primary); }
 button { cursor: pointer; }
 
-/* ---- Header / Nav ---- */
+/* Header */
 header {
-  background: var(--primary);
-  color: #fff;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  height: 52px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.2);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  background: var(--primary); color: #fff;
+  padding: 0 24px; display: flex; align-items: center; gap: 16px;
+  height: 52px; box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  position: sticky; top: 0; z-index: 100;
 }
-.logo {
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: .5px;
-  white-space: nowrap;
-}
-nav { display: flex; gap: 4px; }
+.logo { font-size: 16px; font-weight: 700; letter-spacing: .5px; white-space: nowrap; }
+nav { display: flex; gap: 4px; flex: 1; }
 .nav-btn {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,.75);
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 500;
+  background: transparent; border: none; color: rgba(255,255,255,.75);
+  padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500;
   transition: background .15s, color .15s;
 }
-.nav-btn:hover, .nav-btn.active {
-  background: rgba(255,255,255,.18);
-  color: #fff;
+.nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,.18); color: #fff; }
+.user-info { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.user-name { font-size: 12px; color: rgba(255,255,255,.85); white-space: nowrap; }
+#logout-btn {
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+  color: #fff; padding: 4px 10px; border-radius: 5px; font-size: 12px;
 }
+#logout-btn:hover { background: rgba(255,255,255,.25); }
 
-/* ---- Layout ---- */
+/* Layout */
 .page { max-width: 960px; margin: 24px auto; padding: 0 16px; }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
-/* ---- Card ---- */
+/* Card */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  box-shadow: var(--shadow);
-  margin-bottom: 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 24px;
+  box-shadow: var(--shadow); margin-bottom: 16px;
 }
-.card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
-.card h3 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; color: var(--text); }
+.card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+.card h3 { font-size: 13px; font-weight: 600; margin: 14px 0 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
 
-/* ---- Stats grid ---- */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
-}
+/* Stats grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 12px; margin-bottom: 16px; }
 .stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  box-shadow: var(--shadow);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow);
 }
-.stat-card h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); margin-bottom: 8px; }
+.stat-card h3 { font-size: 10px; text-transform: uppercase; letter-spacing: .6px; color: var(--text-muted); margin-bottom: 6px; }
 .stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
-.badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
-}
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
 .badge.ok   { background: #d4edda; color: #155724; }
 .badge.warn { background: #fff3cd; color: #856404; }
 .badge.err  { background: #f8d7da; color: #721c24; }
 
-/* ---- Form ---- */
+/* Status bars */
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; }
+.bar-label { min-width: 100px; color: var(--text-muted); }
+.bar-track { flex: 1; background: var(--border); border-radius: 4px; height: 8px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width .4s; }
+.bar-count { min-width: 30px; text-align: right; font-weight: 600; }
+
+/* Region list */
+#region-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+#region-list li { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px dashed var(--border); }
+#region-list li:last-child { border: none; }
+
+/* Timeline canvas */
+#timeline-section { margin-bottom: 16px; }
+#timeline-canvas { display: block; max-width: 100%; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); }
+
+/* Form */
 .form-group { margin-bottom: 14px; }
 label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
-input[type="text"], textarea, select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 13px;
-  transition: border-color .15s;
+input[type="text"], input[type="password"], textarea, select {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg); color: var(--text); font-size: 13px;
 }
-input[type="text"]:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: var(--primary-light);
-}
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-light); }
 textarea { resize: vertical; min-height: 80px; }
-.btn {
-  padding: 8px 18px;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  transition: opacity .15s;
-}
+.btn { padding: 8px 18px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; transition: opacity .15s; }
 .btn:disabled { opacity: .5; cursor: not-allowed; }
 .btn-primary { background: var(--primary); color: #fff; }
 .btn-primary:hover:not(:disabled) { background: var(--primary-light); }
 .btn-secondary { background: var(--border); color: var(--text); }
 .btn-secondary:hover { opacity: .8; }
+.btn-danger { background: var(--danger); color: #fff; }
 
-/* ---- Risk display ---- */
-.risk-display {
-  display: flex; align-items: center; gap: 24px; margin-bottom: 16px;
+/* Login overlay */
+#login-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center; z-index: 200;
 }
+#login-overlay.hidden { display: none; }
+.login-box {
+  background: var(--surface); border-radius: 12px; padding: 32px 36px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3); width: 100%; max-width: 380px;
+}
+.login-box h2 { font-size: 20px; margin-bottom: 24px; text-align: center; }
+.login-error { color: var(--danger); font-size: 12px; margin-top: 10px; min-height: 18px; }
+
+/* Risk display */
+.risk-display { display: flex; align-items: center; gap: 24px; margin-bottom: 16px; }
 .risk-gauge-wrap { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
 .risk-gauge-wrap svg { width: 90px; height: 90px; }
-.risk-center {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-}
+.risk-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .risk-number { font-size: 26px; font-weight: 800; line-height: 1; }
 .risk-number.high   { color: var(--danger); }
 .risk-number.medium { color: var(--warn); }
@@ -171,102 +134,75 @@ textarea { resize: vertical; min-height: 80px; }
 .incident-type { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
 .confidence { font-size: 12px; color: var(--text-muted); }
 
-/* ---- Reasons ---- */
+/* Reasons */
 #reasons-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-#reasons-list li {
-  display: flex; align-items: baseline; gap: 8px;
-  padding: 6px 10px;
-  background: var(--bg);
-  border-radius: 6px;
-  font-size: 13px;
-}
-.layer-tag {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  padding: 2px 6px; border-radius: 4px;
-  flex-shrink: 0;
-}
+#reasons-list li { display: flex; align-items: baseline; gap: 8px; padding: 6px 10px; background: var(--bg); border-radius: 6px; font-size: 13px; }
+.layer-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
 .layer-rule       { background: #fce4ec; color: #880e4f; }
 .layer-ml         { background: #e3f2fd; color: #0d47a1; }
 .layer-heuristic  { background: #fff8e1; color: #e65100; }
 .layer-enrichment { background: #e8f5e9; color: #1b5e20; }
 .reason-weight { font-weight: 700; color: var(--text-muted); min-width: 26px; }
 
-/* ---- Table ---- */
+/* Table */
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th {
-  text-align: left; padding: 8px 12px;
-  background: var(--bg); border-bottom: 2px solid var(--border);
-  font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
-  color: var(--text-muted); white-space: nowrap;
-}
+th { text-align: left; padding: 8px 12px; background: var(--bg); border-bottom: 2px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); white-space: nowrap; }
 td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
 tr:last-child td { border-bottom: none; }
 tr:hover td { background: var(--bg); }
 
-/* ---- Status badges ---- */
-.status-open       { color: var(--primary); font-weight: 600; }
-.status-in_review  { color: var(--warn); font-weight: 600; }
-.status-closed     { color: var(--text-muted); }
-.status-archived   { color: var(--text-muted); }
-
-/* ---- Toolbar ---- */
-.toolbar {
-  display: flex; gap: 8px; align-items: center;
-  flex-wrap: wrap; margin-bottom: 12px;
-}
+/* Toolbar */
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
 .toolbar select { max-width: 200px; }
-
-/* ---- Pagination ---- */
 #pagination { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 12px; }
-#pagination button {
-  padding: 4px 10px; border: 1px solid var(--border);
-  border-radius: 4px; background: var(--surface); color: var(--text);
-  font-size: 12px;
-}
-#pagination button:disabled {
-  background: var(--primary); color: #fff; border-color: var(--primary);
-}
+#pagination button { padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--text); font-size: 12px; }
+#pagination button:disabled { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-/* ---- Graph canvas ---- */
-#graph-canvas {
-  display: block; max-width: 100%; border-radius: 6px;
-  background: var(--bg); border: 1px solid var(--border);
-}
+/* Graph */
+#graph-canvas { display: block; max-width: 100%; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); }
 .hint { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
 
-/* ---- Enrichment table ---- */
+/* PII / enrich */
+#pii-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+#pii-list li { padding: 4px 10px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404; }
 #enrichment-section table { font-size: 12px; }
 #enrichment-section td:first-child { color: var(--text-muted); font-weight: 600; width: 140px; }
 
-/* ---- PII section ---- */
-#pii-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-#pii-list li {
-  padding: 4px 10px; background: #fff3cd;
-  border-radius: 4px; font-size: 12px; color: #856404;
-}
-
-/* ---- Loader ---- */
-.spinner {
-  width: 20px; height: 20px;
-  border: 3px solid var(--border);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-  display: inline-block;
-}
+/* Spinner */
+.spinner { width: 20px; height: 20px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ---- Responsive ---- */
 @media (max-width: 600px) {
-  header { padding: 0 12px; }
+  header { padding: 0 12px; gap: 8px; }
   .page { padding: 0 12px; }
   .risk-display { flex-direction: column; align-items: flex-start; }
+  .user-name { display: none; }
 }
 </style>
 </head>
 <body>
 
+<!-- ======================== Login overlay ======================== -->
+<div id="login-overlay">
+  <div class="login-box">
+    <h2>🛡 UzCyberWatch</h2>
+    <form id="login-form" autocomplete="off">
+      <div class="form-group">
+        <label for="login-username">Foydalanuvchi nomi</label>
+        <input type="text" id="login-username" placeholder="admin" autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Parol</label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" id="login-btn" class="btn btn-primary" style="width:100%">Kirish</button>
+      <div class="login-error" id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ======================== Header ======================== -->
 <header>
   <div class="logo">🛡 UzCyberWatch</div>
   <nav>
@@ -274,6 +210,10 @@ tr:hover td { background: var(--bg); }
     <button class="nav-btn" data-tab="analyse">Tahlil</button>
     <button class="nav-btn" data-tab="cases">Ishlar</button>
   </nav>
+  <div class="user-info">
+    <span class="user-name" id="user-name"></span>
+    <button id="logout-btn">Chiqish</button>
+  </div>
 </header>
 
 <div class="page">
@@ -281,33 +221,60 @@ tr:hover td { background: var(--bg); }
   <!-- ======================== FT-31: Dashboard ======================== -->
   <section id="dashboard" class="tab-panel active">
 
+    <!-- Asosiy statistika -->
     <div class="stats-grid">
-      <div class="stat-card" id="stat-status">
+      <div class="stat-card">
         <h3>Tizim holati</h3>
         <div class="stat-value"><span class="badge warn" id="status-badge">Tekshirilmoqda…</span></div>
       </div>
-      <div class="stat-card" id="stat-cases-count">
+      <div class="stat-card">
         <h3>Jami ishlar</h3>
         <div class="stat-value" id="cases-count">—</div>
       </div>
       <div class="stat-card">
-        <h3>API versiya</h3>
-        <div class="stat-value" id="api-version">—</div>
+        <h3>O'rtacha xavf</h3>
+        <div class="stat-value" id="avg-risk">—</div>
+      </div>
+      <div class="stat-card">
+        <h3>Yuqori xavfli</h3>
+        <div class="stat-value" id="high-risk-count" style="color:var(--danger)">—</div>
       </div>
     </div>
 
-    <!-- FT-36: Kampaniya grafı -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+
+      <!-- Status taqsimoti -->
+      <div class="card" style="margin-bottom:0">
+        <h2>Status taqsimoti</h2>
+        <div id="status-bars"></div>
+      </div>
+
+      <!-- Viloyat taqsimoti -->
+      <div class="card" style="margin-bottom:0">
+        <h2>Viloyatlar (top-5)</h2>
+        <ul id="region-list"><li style="color:var(--text-muted)">Yuklanmoqda…</li></ul>
+      </div>
+
+    </div>
+
+    <!-- Kunlik dinamika (timeline) -->
+    <div class="card" id="timeline-section">
+      <h2>Kunlik ishlar dinamikasi — oxirgi 14 kun</h2>
+      <canvas id="timeline-canvas" width="880" height="160"></canvas>
+      <p class="hint">Har bir ustun bir kunni ifodalaydi. Ma'lumot <code>/api/v1/stats/timeline</code> dan olinadi.</p>
+    </div>
+
+    <!-- Kampaniya grafı -->
     <div class="card" id="graph-section">
       <h2>Kampaniya grafı — klaster ko'rinishi (FT-36)</h2>
-      <canvas id="graph-canvas" width="720" height="280"></canvas>
-      <p class="hint">Fishing domenlarining kampaniya klasterlari (Louvain algoritmi). Rangi bir xil tugunlar bir kampaniyaga tegishli.</p>
+      <canvas id="graph-canvas" width="720" height="260"></canvas>
+      <p class="hint">Fishing domenlarining kampaniya klasterlari (Louvain algoritmi).</p>
     </div>
 
   </section>
 
   <!-- ======================== FT-32/33/35: Tahlil ======================== -->
   <section id="analyse" class="tab-panel">
-
     <div class="card">
       <h2>URL / Matn tahlili</h2>
       <form id="analyse-form" autocomplete="off">
@@ -323,18 +290,15 @@ tr:hover td { background: var(--bg); }
       </form>
     </div>
 
-    <!-- FT-33: Risk natijalari -->
     <div class="card" id="result-panel" style="display:none">
       <h2>Tahlil natijasi</h2>
-
       <div class="risk-display">
         <div class="risk-gauge-wrap">
           <svg viewBox="0 0 36 36">
             <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               fill="none" stroke="var(--border)" stroke-width="3.8"/>
             <path id="gauge-arc" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              fill="none" stroke="var(--ok)" stroke-width="3.8"
-              stroke-dasharray="0, 100"/>
+              fill="none" stroke="var(--ok)" stroke-width="3.8" stroke-dasharray="0, 100"/>
           </svg>
           <div class="risk-center">
             <span id="risk-score" class="risk-number low">0</span>
@@ -347,62 +311,44 @@ tr:hover td { background: var(--bg); }
           <div id="lang-text" style="font-size:12px;color:var(--text-muted);margin-top:4px"></div>
         </div>
       </div>
-
       <div id="reasons-section">
         <h3>Aniqlash sabablari (FT-27)</h3>
         <ul id="reasons-list"></ul>
       </div>
-
       <div id="pii-section" style="display:none">
         <h3>Shaxsiy ma'lumotlar topildi (HT-03)</h3>
         <ul id="pii-list"></ul>
       </div>
-
-      <!-- HT-05: huquqiy tavsiyalar -->
       <div id="legal-section">
         <h3>Huquqiy tavsiyalar (HT-05)</h3>
         <ul id="legal-list"></ul>
       </div>
-
-      <!-- FT-35: Boyitish ma'lumotlari -->
       <div id="enrichment-section">
         <h3>Boyitish ma'lumotlari (FT-35)</h3>
-        <table>
-          <tbody id="enrichment-body"></tbody>
-        </table>
+        <table><tbody id="enrichment-body"></tbody></table>
       </div>
     </div>
-
   </section>
 
   <!-- ======================== FT-34/37: Ishlar ======================== -->
   <section id="cases" class="tab-panel">
-
     <div class="card">
       <div class="toolbar">
         <select id="status-filter">
           <option value="">Barcha holatlar</option>
-          <option value="open">Ochiq</option>
-          <option value="in_review">Ko'rib chiqilmoqda</option>
+          <option value="new">Yangi</option>
+          <option value="triage">Triage</option>
+          <option value="confirmed">Tasdiqlangan</option>
+          <option value="false_positive">Yolg'on musbat</option>
           <option value="closed">Yopiq</option>
-          <option value="archived">Arxivlangan</option>
         </select>
         <button class="btn btn-secondary" id="refresh-cases">Yangilash</button>
-        <!-- FT-37: CSV eksport -->
         <button class="btn btn-secondary" id="export-btn">⬇ CSV Eksport</button>
       </div>
-
       <div class="table-wrap">
         <table id="cases-table">
           <thead>
-            <tr>
-              <th>ID</th>
-              <th>Sarlavha</th>
-              <th>Holat</th>
-              <th>Risk</th>
-              <th>Viloyat</th>
-              <th>Sanasi</th>
-            </tr>
+            <tr><th>ID</th><th>Sarlavha</th><th>Holat</th><th>Risk</th><th>Viloyat</th><th>Sanasi</th></tr>
           </thead>
           <tbody id="cases-body">
             <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">
@@ -411,21 +357,85 @@ tr:hover td { background: var(--bg); }
           </tbody>
         </table>
       </div>
-
       <div id="pagination"></div>
     </div>
-
   </section>
 
-</div><!-- .page -->
+</div>
 
 <script>
-/* ======================== Konstanta ======================== */
-const API = '/api/v1';
+/* ==================== Auth / Token ==================== */
+const TOKEN_KEY = 'ucw_jwt_token';
+const USERNAME_KEY = 'ucw_username';
 
-/* ======================== Tab navigatsiya ======================== */
-const tabs    = document.querySelectorAll('.nav-btn');
-const panels  = document.querySelectorAll('.tab-panel');
+function getToken() { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } }
+function setToken(t, u) {
+  try { localStorage.setItem(TOKEN_KEY, t); localStorage.setItem(USERNAME_KEY, u); } catch {}
+}
+function clearToken() { try { localStorage.removeItem(TOKEN_KEY); localStorage.removeItem(USERNAME_KEY); } catch {} }
+
+function authHeaders() {
+  const t = getToken();
+  return t ? { 'Authorization': `Bearer ${t}`, 'Content-Type': 'application/json' }
+           : { 'Content-Type': 'application/json' };
+}
+
+async function apiGet(path) {
+  const r = await fetch(`/api/v1${path}`, { headers: authHeaders() });
+  if (r.status === 401) { showLogin(); return null; }
+  return r.ok ? r.json() : null;
+}
+
+async function apiPost(path, body) {
+  const r = await fetch(`/api/v1${path}`, {
+    method: 'POST', headers: authHeaders(), body: JSON.stringify(body)
+  });
+  if (r.status === 401 && path !== '/auth/login') { showLogin(); return null; }
+  return { ok: r.ok, status: r.status, data: await r.json().catch(() => ({})) };
+}
+
+/* ==================== Login overlay ==================== */
+function showLogin() {
+  document.getElementById('login-overlay').classList.remove('hidden');
+}
+function hideLogin() {
+  document.getElementById('login-overlay').classList.add('hidden');
+}
+
+document.getElementById('login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const errEl = document.getElementById('login-error');
+  errEl.textContent = '';
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.textContent = 'Kirilmoqda…';
+
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  const res = await apiPost('/auth/login', { username, password });
+  btn.disabled = false;
+  btn.textContent = 'Kirish';
+
+  if (res?.ok) {
+    setToken(res.data.access_token, username);
+    document.getElementById('user-name').textContent = username;
+    hideLogin();
+    loadDashboard();
+  } else {
+    errEl.textContent = res?.data?.detail || 'Login yoki parol noto\'g\'ri';
+  }
+});
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  clearToken();
+  document.getElementById('user-name').textContent = '';
+  showLogin();
+});
+
+/* ==================== Tab navigatsiya ==================== */
+const tabs   = document.querySelectorAll('.nav-btn');
+const panels = document.querySelectorAll('.tab-panel');
 
 tabs.forEach(btn => {
   btn.addEventListener('click', () => {
@@ -439,216 +449,216 @@ tabs.forEach(btn => {
   });
 });
 
-/* ======================== FT-31: Dashboard ======================== */
+/* ==================== FT-31: Dashboard ==================== */
+const STATUS_COLORS = { new:'#3498db', triage:'#e67e22', confirmed:'#e74c3c', false_positive:'#95a5a6', closed:'#27ae60' };
+
 async function loadDashboard() {
-  // Tizim holati (/health)
+  // Health
   try {
     const h = await fetch('/health').then(r => r.json());
     const badge = document.getElementById('status-badge');
-    if (h.status === 'ok') {
-      badge.textContent = '✅ Faol';
-      badge.className = 'badge ok';
-    } else {
-      badge.textContent = '⚠ Noma\'lum';
-      badge.className = 'badge warn';
-    }
-    document.getElementById('api-version').textContent = h.version || '—';
+    if (h.status === 'ok') { badge.textContent = '✅ Faol'; badge.className = 'badge ok'; }
+    else { badge.textContent = '⚠ Noma\'lum'; badge.className = 'badge warn'; }
   } catch {
-    const badge = document.getElementById('status-badge');
-    badge.textContent = '❌ Ulanib bo\'lmadi';
-    badge.className = 'badge err';
+    document.getElementById('status-badge').textContent = '❌ Ulanib bo\'lmadi';
+    document.getElementById('status-badge').className = 'badge err';
   }
 
-  // Ishlar soni (/api/v1/cases)
-  try {
-    const data = await fetch(`${API}/cases?page=1&size=1`).then(r => r.json());
-    document.getElementById('cases-count').textContent = data.total ?? '—';
-  } catch {
-    document.getElementById('cases-count').textContent = '—';
+  // Stats overview
+  const stats = await apiGet('/stats');
+  if (stats) {
+    document.getElementById('cases-count').textContent = stats.total_cases;
+    document.getElementById('avg-risk').textContent = stats.avg_risk.toFixed(1);
+    document.getElementById('high-risk-count').textContent = stats.high_risk_count;
+    renderStatusBars(stats.by_status, stats.total_cases);
+    renderRegionList(stats.by_region);
   }
 
-  // FT-36: Graf chizish
+  // Timeline
+  const tl = await apiGet('/stats/timeline?days=14');
+  if (tl) drawTimeline(tl);
+
+  // Graf
   drawGraph();
 }
 
-/* ======================== FT-36: Graf vizualizatsiyasi ======================== */
-function drawGraph() {
-  const canvas = document.getElementById('graph-canvas');
-  if (!canvas || !canvas.getContext) return;
+function renderStatusBars(byStatus, total) {
+  const el = document.getElementById('status-bars');
+  if (!byStatus || !total) { el.innerHTML = '<p style="color:var(--text-muted);font-size:12px">Ma\'lumot yo\'q</p>'; return; }
+  const labels = { new:'Yangi', triage:'Triage', confirmed:'Tasdiqlangan', false_positive:'Yolg\'on musbat', closed:'Yopiq' };
+  el.innerHTML = Object.entries(byStatus).map(([k, cnt]) => {
+    const pct = total > 0 ? Math.round(cnt / total * 100) : 0;
+    const col = STATUS_COLORS[k] || '#aaa';
+    return `<div class="bar-row">
+      <span class="bar-label">${labels[k] || k}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <span class="bar-count">${cnt}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderRegionList(byRegion) {
+  const ul = document.getElementById('region-list');
+  if (!byRegion || byRegion.length === 0) { ul.innerHTML = '<li style="color:var(--text-muted)">Ma\'lumot yo\'q</li>'; return; }
+  ul.innerHTML = byRegion.slice(0, 5).map(r =>
+    `<li><span>${escHtml(r.region)}</span><strong>${r.count}</strong></li>`
+  ).join('');
+}
+
+function drawTimeline(data) {
+  const canvas = document.getElementById('timeline-canvas');
+  if (!canvas?.getContext) return;
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
+  const PAD = { top: 16, right: 16, bottom: 36, left: 36 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bottom;
+  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  const textCol = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
 
   ctx.clearRect(0, 0, W, H);
+  if (!data.length) {
+    ctx.fillStyle = textCol || '#aaa';
+    ctx.textAlign = 'center'; ctx.font = '13px system-ui';
+    ctx.fillText('Ma\'lumot yo\'q', W / 2, H / 2);
+    return;
+  }
 
-  // Namuna kampaniya tugunlari (real tizimda /api/v1/graph dan keladi)
-  const nodes = [
-    // Kampaniya A (qizil) — bank taqlidi
-    { x: 160, y: 110, r: 18, label: 'kapitalbnk.uz',   cluster: 0 },
-    { x: 240, y:  70, r: 14, label: 'kapital-bank.uz', cluster: 0 },
-    { x: 200, y: 185, r: 12, label: '91.2.x.x',        cluster: 0 },
-    // Kampaniya B (ko'k) — to'lov taqlidi
-    { x: 460, y: 100, r: 18, label: 'payme-kirish.com', cluster: 1 },
-    { x: 540, y:  60, r: 14, label: 'payme-uz.net',     cluster: 1 },
-    { x: 500, y: 175, r: 12, label: 'click-uz.site',    cluster: 1 },
-    // Kampaniya C (yashil) — yakka
-    { x: 350, y: 210, r: 12, label: 'uzcard-login.tk',  cluster: 2 },
-  ];
-  const edges = [[0,1],[0,2],[1,2],[3,4],[3,5],[4,5]];
-  const palette = ['#e74c3c','#2980b9','#27ae60','#f39c12'];
+  const maxVal = Math.max(...data.map(d => d.count), 1);
+  const barW = Math.max(4, cW / data.length - 4);
 
-  // Qirralar
-  edges.forEach(([i,j]) => {
+  data.forEach((d, i) => {
+    const x = PAD.left + i * (cW / data.length) + (cW / data.length - barW) / 2;
+    const barH = (d.count / maxVal) * cH;
+    const y = PAD.top + cH - barH;
+    ctx.fillStyle = '#2980b9';
     ctx.beginPath();
-    ctx.strokeStyle = '#c8d6e5';
-    ctx.lineWidth = 1.5;
-    ctx.moveTo(nodes[i].x, nodes[i].y);
-    ctx.lineTo(nodes[j].x, nodes[j].y);
-    ctx.stroke();
-  });
-
-  // Tugunlar
-  nodes.forEach(n => {
-    const col = palette[n.cluster % palette.length];
-    // Shadow
-    ctx.shadowColor = col;
-    ctx.shadowBlur = 8;
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-    ctx.fillStyle = col;
+    ctx.roundRect ? ctx.roundRect(x, y, barW, barH, 3) : ctx.rect(x, y, barW, barH);
     ctx.fill();
-    ctx.shadowBlur = 0;
 
-    // Label
-    ctx.fillStyle = getComputedStyle(document.documentElement)
-                      .getPropertyValue('--text').trim() || '#1a2332';
-    ctx.font = '9px system-ui';
-    ctx.textAlign = 'center';
-    ctx.fillText(n.label.slice(0, 16), n.x, n.y + n.r + 12);
-  });
+    // Date label
+    if (data.length <= 14) {
+      ctx.fillStyle = textCol || '#555';
+      ctx.font = '9px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText((d.date || '').slice(5), x + barW / 2, H - PAD.bottom + 13);
+    }
 
-  // Klaster legenda
-  const legend = [
-    { label: 'Kampaniya A (bank)', color: palette[0] },
-    { label: 'Kampaniya B (to\'lov)', color: palette[1] },
-    { label: 'Kampaniya C (karta)', color: palette[2] },
-  ];
-  legend.forEach((l, i) => {
-    ctx.beginPath();
-    ctx.arc(620, 60 + i * 28, 7, 0, Math.PI * 2);
-    ctx.fillStyle = l.color;
-    ctx.fill();
-    ctx.fillStyle = getComputedStyle(document.documentElement)
-                      .getPropertyValue('--text-muted').trim() || '#5a6a7e';
-    ctx.font = '11px system-ui';
-    ctx.textAlign = 'left';
-    ctx.fillText(l.label, 634, 64 + i * 28);
+    // Count on top
+    if (d.count > 0) {
+      ctx.fillStyle = textCol || '#333';
+      ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText(d.count, x + barW / 2, y - 3);
+    }
   });
 }
 
-/* ======================== FT-32: Tahlil formasi ======================== */
+/* ==================== FT-36: Graf ==================== */
+function drawGraph() {
+  const canvas = document.getElementById('graph-canvas');
+  if (!canvas?.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const nodes = [
+    { x:160, y:110, r:18, label:'kapitalbnk.uz',   cluster:0 },
+    { x:240, y: 70, r:14, label:'kapital-bank.uz', cluster:0 },
+    { x:200, y:185, r:12, label:'91.2.x.x',        cluster:0 },
+    { x:460, y:100, r:18, label:'payme-kirish.com', cluster:1 },
+    { x:540, y: 60, r:14, label:'payme-uz.net',     cluster:1 },
+    { x:500, y:175, r:12, label:'click-uz.site',    cluster:1 },
+    { x:350, y:210, r:12, label:'uzcard-login.tk',  cluster:2 },
+  ];
+  const edges = [[0,1],[0,2],[1,2],[3,4],[3,5],[4,5]];
+  const palette = ['#e74c3c','#2980b9','#27ae60','#f39c12'];
+  const textCol = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#333';
+
+  edges.forEach(([i,j]) => {
+    ctx.beginPath(); ctx.strokeStyle='#c8d6e5'; ctx.lineWidth=1.5;
+    ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+  });
+  nodes.forEach(n => {
+    const col = palette[n.cluster % palette.length];
+    ctx.shadowColor = col; ctx.shadowBlur = 8;
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+    ctx.fillStyle = col; ctx.fill(); ctx.shadowBlur = 0;
+    ctx.fillStyle = textCol; ctx.font='9px system-ui'; ctx.textAlign='center';
+    ctx.fillText(n.label.slice(0,16), n.x, n.y + n.r + 12);
+  });
+  [['Kampaniya A (bank)', palette[0]], ['Kampaniya B (to\'lov)', palette[1]], ['Kampaniya C (karta)', palette[2]]]
+    .forEach(([l, c], i) => {
+      ctx.beginPath(); ctx.arc(620, 55+i*28, 7, 0, Math.PI*2); ctx.fillStyle=c; ctx.fill();
+      ctx.fillStyle=textCol; ctx.font='11px system-ui'; ctx.textAlign='left';
+      ctx.fillText(l, 634, 59+i*28);
+    });
+}
+
+/* ==================== FT-32: Tahlil ==================== */
 document.getElementById('analyse-form').addEventListener('submit', async e => {
   e.preventDefault();
   const url  = document.getElementById('url-input').value.trim();
   const text = document.getElementById('text-input').value.trim();
-  if (!url && !text) {
-    alert('URL yoki matn kiriting');
-    return;
-  }
+  if (!url && !text) { alert('URL yoki matn kiriting'); return; }
 
   const btn = document.getElementById('analyse-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Tahlil…';
-
   try {
     const body = {};
     if (url)  body.url  = url;
     if (text) body.text = text;
-
-    const resp = await fetch(`${API}/analyse`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(body),
-    });
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.detail || `HTTP ${resp.status}`);
-    }
-    displayResult(await resp.json());
-  } catch (err) {
-    alert('Tahlil xatosi: ' + err.message);
+    const res = await apiPost('/analyse', body);
+    if (res?.ok) displayResult(res.data);
+    else alert('Tahlil xatosi: ' + (res?.data?.detail || `HTTP ${res?.status}`));
   } finally {
-    btn.disabled = false;
-    btn.textContent = 'Tahlil qilish';
+    btn.disabled = false; btn.textContent = 'Tahlil qilish';
   }
 });
 
-/* ======================== FT-33: Natijalar ======================== */
 function displayResult(v) {
-  const panel = document.getElementById('result-panel');
-  panel.style.display = 'block';
-
-  // Risk gauge
+  document.getElementById('result-panel').style.display = 'block';
   const score = v.risk_score ?? 0;
   const el = document.getElementById('risk-score');
   el.textContent = score;
   el.className = 'risk-number ' + (score >= 70 ? 'high' : score >= 35 ? 'medium' : 'low');
-
-  const arc   = document.getElementById('gauge-arc');
-  const color = score >= 70 ? 'var(--danger)' : score >= 35 ? 'var(--warn)' : 'var(--ok)';
-  arc.setAttribute('stroke', color);
+  const arc = document.getElementById('gauge-arc');
+  arc.setAttribute('stroke', score>=70 ? 'var(--danger)' : score>=35 ? 'var(--warn)' : 'var(--ok)');
   arc.setAttribute('stroke-dasharray', `${score}, 100`);
-
   document.getElementById('incident-type').textContent = v.incident_type || '—';
-  document.getElementById('confidence-text').textContent =
-    `Ishonch: ${((v.confidence ?? 0) * 100).toFixed(0)}%`;
-  document.getElementById('lang-text').textContent =
-    v.lang ? `Til: ${v.lang}` : '';
+  document.getElementById('confidence-text').textContent = `Ishonch: ${((v.confidence??0)*100).toFixed(0)}%`;
+  document.getElementById('lang-text').textContent = v.lang ? `Til: ${v.lang}` : '';
 
-  // Sabablar (FT-27)
   const ul = document.getElementById('reasons-list');
-  ul.innerHTML = (v.reasons || []).map(r => `
-    <li>
-      <span class="layer-tag layer-${r.layer}">${r.layer}</span>
-      <span class="reason-weight">${r.weight}</span>
-      <span><b>${r.code}</b> — ${escHtml(r.detail)}</span>
-    </li>`).join('') || '<li style="color:var(--text-muted)">Sabab topilmadi</li>';
+  ul.innerHTML = (v.reasons || []).map(r =>
+    `<li><span class="layer-tag layer-${r.layer}">${r.layer}</span>
+     <span class="reason-weight">${r.weight}</span>
+     <span><b>${r.code}</b> — ${escHtml(r.detail)}</span></li>`
+  ).join('') || '<li style="color:var(--text-muted)">Sabab topilmadi</li>';
 
-  // PII (HT-03) — faqat hint va hash
-  const piiSec = document.getElementById('pii-section');
   const piiItems = v.pii_found || [];
-  if (piiItems.length > 0) {
-    piiSec.style.display = 'block';
-    document.getElementById('pii-list').innerHTML = piiItems.map(p =>
-      `<li>${escHtml(p.kind)}: ${escHtml(p.hint)}</li>`).join('');
-  } else {
-    piiSec.style.display = 'none';
-  }
+  const piiSec = document.getElementById('pii-section');
+  piiSec.style.display = piiItems.length ? 'block' : 'none';
+  document.getElementById('pii-list').innerHTML = piiItems.map(p => `<li>${escHtml(p.kind)}: ${escHtml(p.hint)}</li>`).join('');
 
-  // Huquqiy tavsiyalar (HT-05)
-  document.getElementById('legal-list').innerHTML = (v.legal || []).map(l => `
-    <li style="padding:4px 0;font-size:13px">
-      <b>${escHtml(l.article_code)}</b> — ${escHtml(l.rationale)}
-      <span style="color:var(--warn);font-size:11px"> (Ko'rib chiqish zarur)</span>
-    </li>`).join('') || '<li style="color:var(--text-muted)">Moddalar topilmadi</li>';
+  document.getElementById('legal-list').innerHTML = (v.legal || []).map(l =>
+    `<li style="padding:4px 0;font-size:13px"><b>${escHtml(l.article_code)}</b> — ${escHtml(l.rationale)}
+     <span style="color:var(--warn);font-size:11px"> (Ko'rib chiqish zarur)</span></li>`
+  ).join('') || '<li style="color:var(--text-muted)">Moddalar topilmadi</li>';
 
-  // FT-35: Boyitish ma'lumotlari (enrich qismida kelishi mumkin)
   const enrichFields = [
-    ['IP',          v.enrichment?.ip],
-    ['ASN',         v.enrichment?.asn],
-    ['Mamlakat',    v.enrichment?.geo_country],
-    ['Domen yoshi', v.enrichment?.domain_age_days != null
-                      ? `${v.enrichment.domain_age_days} kun` : null],
-    ['Registrar',   v.enrichment?.registrar],
-    ['SSL emitent', v.enrichment?.cert_issuer],
-    ['pHash',       v.enrichment?.screenshot_phash],
+    ['IP', v.enrichment?.ip], ['ASN', v.enrichment?.asn],
+    ['Mamlakat', v.enrichment?.geo_country],
+    ['Domen yoshi', v.enrichment?.domain_age_days != null ? `${v.enrichment.domain_age_days} kun` : null],
+    ['Registrar', v.enrichment?.registrar], ['SSL emitent', v.enrichment?.cert_issuer],
+    ['pHash', v.enrichment?.screenshot_phash],
   ];
   document.getElementById('enrichment-body').innerHTML = enrichFields
-    .filter(([, val]) => val != null)
-    .map(([k, val]) => `<tr><td>${k}</td><td>${escHtml(String(val))}</td></tr>`)
+    .filter(([,val]) => val != null)
+    .map(([k,val]) => `<tr><td>${k}</td><td>${escHtml(String(val))}</td></tr>`)
     .join('') || '<tr><td colspan="2" style="color:var(--text-muted)">Boyitish ma\'lumotlari yo\'q</td></tr>';
 }
 
-/* ======================== FT-34: Ishlar ======================== */
+/* ==================== FT-34: Ishlar ==================== */
 let _page = 1;
 
 async function loadCases(page = 1) {
@@ -661,31 +671,26 @@ async function loadCases(page = 1) {
   tbody.innerHTML = '<tr><td colspan="6" style="text-align:center"><span class="spinner"></span></td></tr>';
 
   try {
-    const data = await fetch(`${API}/cases?${params}`).then(r => r.json());
+    const data = await apiGet(`/cases?${params}`);
+    if (!data) return;
     const items = data.items || [];
-
-    if (items.length === 0) {
+    if (!items.length) {
       tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">Ishlar topilmadi</td></tr>';
     } else {
-      tbody.innerHTML = items.map(c => `
-        <tr>
-          <td style="font-family:monospace;font-size:11px">${c.id.slice(0,8)}…</td>
-          <td>${escHtml(c.title)}</td>
-          <td><span class="status-${c.status}">${c.status}</span></td>
-          <td style="font-weight:700;color:${c.total_risk >= 70 ? 'var(--danger)' : c.total_risk >= 35 ? 'var(--warn)' : 'var(--ok)'}">${c.total_risk}</td>
-          <td>${c.region || '—'}</td>
-          <td style="color:var(--text-muted)">${new Date(c.opened_at).toLocaleDateString('uz-UZ')}</td>
-        </tr>`).join('');
+      tbody.innerHTML = items.map(c => `<tr>
+        <td style="font-family:monospace;font-size:11px">${c.id.slice(0,8)}…</td>
+        <td>${escHtml(c.title)}</td>
+        <td>${escHtml(c.status)}</td>
+        <td style="font-weight:700;color:${c.total_risk>=70?'var(--danger)':c.total_risk>=35?'var(--warn)':'var(--ok)'}">${c.total_risk}</td>
+        <td>${c.region || '—'}</td>
+        <td style="color:var(--text-muted)">${new Date(c.opened_at).toLocaleDateString('uz-UZ')}</td>
+      </tr>`).join('');
     }
-
-    // Sahifalash
-    const total = data.total || 0;
-    const pages = Math.ceil(total / 20);
+    const pages = Math.ceil((data.total || 0) / 20);
     document.getElementById('pagination').innerHTML =
-      Array.from({ length: Math.min(pages, 10) }, (_, i) => i + 1)
-        .map(p => `<button onclick="loadCases(${p})" ${p === page ? 'disabled' : ''}>${p}</button>`)
+      Array.from({length: Math.min(pages,10)}, (_,i) => i+1)
+        .map(p => `<button onclick="loadCases(${p})" ${p===page?'disabled':''}>${p}</button>`)
         .join('');
-
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="6" style="color:var(--danger);padding:16px">Xato: ${escHtml(err.message)}</td></tr>`;
   }
@@ -694,46 +699,43 @@ async function loadCases(page = 1) {
 document.getElementById('status-filter').addEventListener('change', () => loadCases(1));
 document.getElementById('refresh-cases').addEventListener('click',  () => loadCases(_page));
 
-/* ======================== FT-37: CSV eksport ======================== */
+/* ==================== FT-37: CSV ==================== */
 document.getElementById('export-btn').addEventListener('click', async () => {
   const status = document.getElementById('status-filter').value;
   const params = new URLSearchParams({ page: 1, size: 1000 });
   if (status) params.append('status', status);
-
   try {
-    const data  = await fetch(`${API}/cases?${params}`).then(r => r.json());
+    const data = await apiGet(`/cases?${params}`);
+    if (!data) return;
     const items = data.items || [];
-
-    const header = ['id', 'title', 'status', 'total_risk', 'region', 'opened_at'];
+    const header = ['id','title','status','total_risk','region','opened_at'];
     const rows = items.map(c =>
-      [c.id, `"${(c.title || '').replace(/"/g, '""')}"`, c.status,
-       c.total_risk, c.region || '', c.opened_at].join(','));
+      [c.id, `"${(c.title||'').replace(/"/g,'""')}"`, c.status, c.total_risk, c.region||'', c.opened_at].join(','));
     const csv = [header.join(','), ...rows].join('\n');
-
-    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['﻿' + csv], {type:'text/csv;charset=utf-8;'});
     const a = document.createElement('a');
-    a.href  = URL.createObjectURL(blob);
+    a.href = URL.createObjectURL(blob);
     a.download = `uzcyberwatch-${new Date().toISOString().slice(0,10)}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(a.href);
-  } catch (err) {
-    alert('Eksport xatosi: ' + err.message);
-  }
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(a.href);
+  } catch (err) { alert('Eksport xatosi: ' + err.message); }
 });
 
-/* ======================== Yordamchi funksiyalar ======================== */
+/* ==================== Yordamchi ==================== */
 function escHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ======================== Startup ======================== */
-loadDashboard();
+/* ==================== Startup ==================== */
+const token = getToken();
+if (token) {
+  const saved = localStorage.getItem(USERNAME_KEY);
+  if (saved) document.getElementById('user-name').textContent = saved;
+  document.getElementById('login-overlay').classList.add('hidden');
+  loadDashboard();
+} else {
+  showLogin();
+}
 </script>
 </body>
 </html>

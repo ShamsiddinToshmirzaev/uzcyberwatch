@@ -173,3 +173,62 @@ class TestExportSection:
     def test_csv_referenced(self, html):
         low = html.lower()
         assert "csv" in low or "eksport" in low
+
+
+# ================================================================= Sprint 12: Stats va Login
+
+class TestLoginSection:
+    """JWT login paneli."""
+
+    def test_login_form_exists(self, html):
+        assert 'id="login-form"' in html
+
+    def test_login_username_input(self, html):
+        assert 'id="login-username"' in html
+
+    def test_login_password_input(self, html):
+        assert 'id="login-password"' in html
+
+    def test_login_submit_button(self, html):
+        assert 'id="login-btn"' in html
+
+    def test_login_overlay_exists(self, html):
+        assert 'id="login-overlay"' in html
+
+
+class TestStatsSection:
+    """FT-47,48: Real statistika elementlari."""
+
+    def test_total_cases_element(self, html):
+        assert 'id="cases-count"' in html
+
+    def test_avg_risk_element(self, html):
+        assert 'id="avg-risk"' in html
+
+    def test_high_risk_element(self, html):
+        assert 'id="high-risk-count"' in html
+
+    def test_timeline_section_exists(self, html):
+        assert 'id="timeline-section"' in html or 'id="timeline-canvas"' in html
+
+    def test_region_section_exists(self, html):
+        assert 'id="region-list"' in html
+
+    def test_status_distribution_exists(self, html):
+        assert 'id="status-bars"' in html
+
+    def test_stats_api_referenced(self, html):
+        assert "/api/v1/stats" in html
+
+
+class TestAuthHeader:
+    """JWT token API so'rovlarda ishlatiladi."""
+
+    def test_authorization_header_used(self, html):
+        assert "Authorization" in html or "Bearer" in html
+
+    def test_localstorage_token_referenced(self, html):
+        assert "localStorage" in html and ("token" in html.lower() or "jwt" in html.lower())
+
+    def test_logout_button_exists(self, html):
+        assert 'id="logout-btn"' in html
