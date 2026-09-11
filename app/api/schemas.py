@@ -11,7 +11,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.models import CaseStatus
+from app.models import CaseStatus, UserRole
 
 
 # ================================================================= /analyse
@@ -108,5 +108,46 @@ class CaseOut(BaseModel):
     assignee_id:  uuid.UUID | None
     article_code: str | None
     article_conf: float | None
+
+    model_config = {"from_attributes": True}
+
+
+# ================================================================= /auth
+
+class LoginRequest(BaseModel):
+    """Login so'rovi. FT-44."""
+
+    username: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)
+
+
+class TokenOut(BaseModel):
+    """JWT token javobi. FT-44."""
+
+    access_token: str
+    token_type:   str = "bearer"
+
+
+# ================================================================= /users
+
+class UserCreate(BaseModel):
+    """Yangi foydalanuvchi yaratish. FT-43.
+
+    HT-03: parol faqat hash sifatida saqlanadi.
+    """
+
+    username: str      = Field(..., min_length=3, max_length=64)
+    password: str      = Field(..., min_length=6)
+    role:     UserRole = UserRole.analyst
+
+
+class UserOut(BaseModel):
+    """Foydalanuvchi javobi. HT-03: password_hash yo'q."""
+
+    id:         uuid.UUID
+    username:   str
+    role:       UserRole
+    is_active:  bool
+    created_at: datetime
 
     model_config = {"from_attributes": True}

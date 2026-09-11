@@ -6,6 +6,7 @@ pydantic-settings==2.7.0
 sqlalchemy==2.0.36
 alembic==1.14.0
 psycopg[binary]==3.2.3
+asyncpg==0.30.0
 
 # --- kollektorlar (FT-01..09)
 websockets==14.1
@@ -31,6 +32,8 @@ pandas==2.2.3
 joblib==1.4.2
 
 aiofiles==24.1.0
+bcrypt==5.0.0
+python-jose[cryptography]==3.3.0
 
 # --- ishlab chiqish va sinov (NFT-11)
 pytest==8.3.4
