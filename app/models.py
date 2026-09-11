@@ -17,6 +17,7 @@ from sqlalchemy import (
     BigInteger,
     Boolean,
     CheckConstraint,
+    Enum,
     Float,
     ForeignKey,
     Integer,
@@ -99,7 +100,8 @@ class User(Base):
     # HT-03: xom parol emas — argon2id/bcrypt heshi
     password_hash: Mapped[str]       = mapped_column(Text, nullable=False)
     role:          Mapped[UserRole]  = mapped_column(
-        String(20), nullable=False, default=UserRole.analyst, server_default="analyst"
+        Enum(UserRole, name="user_role", native_enum=True, create_type=False),
+        nullable=False, default=UserRole.analyst, server_default="analyst",
     )
     mfa_enabled:   Mapped[bool]      = mapped_column(Boolean, nullable=False, default=False, server_default="false")
     is_active:     Mapped[bool]      = mapped_column(Boolean, nullable=False, default=True, server_default="true")
@@ -120,7 +122,10 @@ class Source(Base):
     __tablename__ = "sources"
 
     id:          Mapped[uuid.UUID]       = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    kind:        Mapped[SourceKind]      = mapped_column(String(20), nullable=False)
+    kind:        Mapped[SourceKind]      = mapped_column(
+        Enum(SourceKind, name="source_kind", native_enum=True, create_type=False),
+        nullable=False,
+    )
     name:        Mapped[str]             = mapped_column(Text, nullable=False, unique=True)
     config:      Mapped[dict[str, Any]]  = mapped_column(JSONB, nullable=False, default=dict, server_default="{}")
     enabled:     Mapped[bool]            = mapped_column(Boolean, nullable=False, default=True, server_default="true")
@@ -147,7 +152,10 @@ class RawEvent(Base):
 
     id:          Mapped[uuid.UUID]       = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     source_id:   Mapped[uuid.UUID]       = mapped_column(UUID(as_uuid=True), ForeignKey("sources.id", ondelete="RESTRICT"), nullable=False)
-    event_type:  Mapped[EventType]       = mapped_column(String(20), nullable=False)
+    event_type:  Mapped[EventType]       = mapped_column(
+        Enum(EventType, name="event_type", native_enum=True, create_type=False),
+        nullable=False,
+    )
     # FT-13: PII maskalangan holda — pii.redact() ishlatilishi shart
     content:     Mapped[str]             = mapped_column(Text, nullable=False)
     url:         Mapped[str | None]      = mapped_column(Text, nullable=True)
@@ -203,7 +211,10 @@ class Indicator(Base):
     )
 
     id:         Mapped[uuid.UUID]       = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    ioc_type:   Mapped[IocType]         = mapped_column(String(20), nullable=False)
+    ioc_type:   Mapped[IocType]         = mapped_column(
+        Enum(IocType, name="ioc_type", native_enum=True, create_type=False),
+        nullable=False,
+    )
     # HT-03: HMAC-SHA256 hesh — pii.pii_hash() ishlatilishi shart
     value_hash: Mapped[str]             = mapped_column(Text, nullable=False)
     value_hint: Mapped[str | None]      = mapped_column(Text, nullable=True)
@@ -259,7 +270,10 @@ class Detector(Base):
     )
 
     id:         Mapped[uuid.UUID]       = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    kind:       Mapped[DetectorKind]    = mapped_column(String(20), nullable=False)
+    kind:       Mapped[DetectorKind]    = mapped_column(
+        Enum(DetectorKind, name="detector_kind", native_enum=True, create_type=False),
+        nullable=False,
+    )
     name:       Mapped[str]             = mapped_column(Text, nullable=False)
     version:    Mapped[str]             = mapped_column(Text, nullable=False, default="1.0", server_default="1.0")
     enabled:    Mapped[bool]            = mapped_column(Boolean, nullable=False, default=True, server_default="true")
@@ -302,7 +316,10 @@ class Case(Base):
     assignee_id:  Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     article_code: Mapped[str | None]      = mapped_column(Text, ForeignKey("legal_articles.code", ondelete="SET NULL"), nullable=True)
     article_conf: Mapped[float | None]    = mapped_column(Float, nullable=True)
-    status:       Mapped[CaseStatus]      = mapped_column(String(20), nullable=False, default=CaseStatus.new, server_default="new")
+    status:       Mapped[CaseStatus]      = mapped_column(
+        Enum(CaseStatus, name="case_status", native_enum=True, create_type=False),
+        nullable=False, default=CaseStatus.new, server_default="new",
+    )
     title:        Mapped[str]             = mapped_column(Text, nullable=False)
     region:       Mapped[str | None]      = mapped_column(Text, nullable=True)
     total_risk:   Mapped[int]             = mapped_column(Integer, nullable=False, default=0, server_default="0")
