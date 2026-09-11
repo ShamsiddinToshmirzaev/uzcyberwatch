@@ -41,6 +41,25 @@ services:
     restart: unless-stopped
     volumes: ["./:/srv"]
 
+  honeypot:
+    build: .
+    env_file: .env
+    depends_on:
+      postgres: {condition: service_healthy}
+    command: python -m app.collectors.honeypot --port 8088 --min-risk 20
+    ports: ["8088:8088"]
+    restart: unless-stopped
+    volumes: ["./:/srv"]
+
+  ti-feed:
+    build: .
+    env_file: .env
+    depends_on:
+      postgres: {condition: service_healthy}
+    command: python -m app.collectors.ti_feed --interval 3600 --min-risk 30
+    restart: unless-stopped
+    volumes: ["./:/srv"]
+
 volumes:
   pgdata:
   redisdata:
